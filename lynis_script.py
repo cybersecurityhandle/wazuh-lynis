@@ -3,6 +3,7 @@ import json
 import sys
 import shutil
 import re
+import os
 
 # Function to remove ANSI color codes
 def remove_ansi_codes(text):
@@ -67,12 +68,19 @@ def main():
     # Convert parsed data to JSON
     json_output = json.dumps(parsed_output, indent=4)
 
-    # Output the JSON to stdout or to a file, as needed
-    print(json_output)
+    # Output directory
+    output_dir = "/var/ossec/logs"
 
-    # Save to file (optional)
-    with open('lynis_output.json', 'w') as file:
+    # Check if output directory exists, if not create it
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    # Save to file
+    output_file_path = os.path.join(output_dir, 'lynis_output.json')
+    with open(output_file_path, 'w') as file:
         file.write(json_output)
+
+    print(f"Lynis output has been saved to {output_file_path}")
 
 # Run the main function
 if __name__ == "__main__":
